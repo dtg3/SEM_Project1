@@ -1,3 +1,9 @@
+# Feedback
+* How many developers are involved? To what degree?
+* It is "src2srcml" and "srcml2src". In the clients, the ML is not capitalized
+* The "srcML" application, is "srcml". Use "srcML" for the format and general toolkit, framework, etc., and "srcml" in the tool names
+* NOT FINISHED
+
 ### srcML - Software Stage Profile
 
 #### What is srcML?
