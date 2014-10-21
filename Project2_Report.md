@@ -42,7 +42,11 @@ One specific applicaiton of this feature would be in assisting the srcMX GUI cli
 * Add element logic to method
 * Add attribute logic to method
 
----
+```
+INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
+```
+
+----------------------------------------
 ### Add Git Input Source to Client
 #### Narrative
 The srcml client currently support a number of input sources from both local and remote files including HTTP(S), FTP(S), SSH, etc. While the remote protocol support is quite comprehensive, one noticible omission is native support for a source repository using git version control. This feature addition could allow users to enter a git repository url and even a revision sha as input to retrieve the source of a project as input to srcml. This would prevent a user from having to first clone a repository externally to their local machine before running srcml and would reduce the number of steps required in this circumstance to one. This feature can also prove useful for a webservice based version of the srcml client in which access to the source code on a physical device (such as tablet or phone) might not be feasible. Example1 shows the the CLi option interface extension.
@@ -52,7 +56,6 @@ The srcml client currently support a number of input sources from both local and
 ```
 srcml git://[local or remourl for repo] --revision=[SHA]
 ```
-
 
 #### Change Plan
 * Add new files src_input_git.cpp and src_input_git.hpp
@@ -72,7 +75,11 @@ srcml git://[local or remourl for repo] --revision=[SHA]
                     const std::string& input_file)
   to the conditional.
 
----
+```
+INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
+```
+
+----------------------------------------
 ### Object Oriented Input Sources
 #### Narrative
 In it's present state, the new srcml client's design is purely functional in most respects. One specific area of functionality that could benefit from the use of an object oriented design would be the input source handling. With a more object oriented approach, an inheritance hierarchy combined with one or more polymorphic methods could be utilized to simplify the way in which the input sources are deterimined and replace much of the contitional logic in create_srcml.cpp and consolidate those input checks and object creation in srcml_input_src.hpp. The result of this change would make collecting data from an input source in create_srcml.cpp a single method call and make adding additional input sources more straight forward as developers would only need to inherit from an abstract base class and fill in the necessary functionality.
@@ -89,3 +96,7 @@ In it's present state, the new srcml client's design is purely functional in mos
 * Repeat for all other input sources
 * Replace includes to srcml_input_src.hpp to input_src.hpp
 * Remove srcml_input_src.*
+
+```
+INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
+```
