@@ -81,9 +81,8 @@ srcml git://[local or remourl for repo] --revision=[SHA]
 
 Figure 2 shows a UML class diagram representation of  current state of the srcml input source module.  Figure 4 shows the new UML diagram after the proposed feature implementation. Only a few additional files namely a handler for a Git input source and any libGit2 related library files need to be added or imported into the system. In terms of modification to the existing design the srcml_request_t class will need an additional field to hold the revision SHA, and srcml_cli will require an additional option to support the collection of that additional data. Once the actual implementation of the collection of the input source is complete, adding a "git" check to create_srcml.cpp and calling the newly created function should complete the task.
 
-```
-INSERT FIGURE 4 HERE
-```
+Figure 4 - UML class diagram showing the addition of Git input handler
+![Modified UML class diagram for Git input sources](images/git_input_source.png)
 
 #### Change Plan
 * Add new field "revision" of type boost optional string to srcml_request_t
