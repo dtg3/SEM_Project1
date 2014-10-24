@@ -33,19 +33,18 @@ srcml [srcML input file] —xpath=//src:name —xmlns:test=http://test.com/test 
 
 One specific applicaiton of this feature would be in assisting the srcMX GUI client for srcML to provide a visualization of the XPath queries within the scope of an entire file instead of simply showing the results on their own.
 
+Figure 1 - PDG of the current state of the transform_srcml function in transform_srcml.cpp
+![transform_srcml Function PDG](images/PDG.png)
+Figure 1 above shows a PDG of the function in need of modification. If we examine the inner boost for each loop we can see the flow involved in selecting the an xpath transformation. When an Xpath transformation is identified, the diagram shows that the exection loops back to the top of the for each loop after calling the appropriate function which unlike the two transformations is a direct library call. Only a straightforward comparison of the tranformation type is performed before the function is called. In terms of data dependencies, most of them (status not included) are contained to the inner and outer boost for each loops. With this knowledge in mind, the proposed change would substitute the direct library call with an additional function call that would select the right xpath library function call give certain use defined fields in the srcml_request object. This wrapper approach will have the least amount of impact and with the exception of a few additional parameters (already available from the paramters of the trasform_srcml function itelf) the new change would almost be a drop in replacement for the old code.  
+
 #### Change Plan
 * API support provided by libsrcml is assumed
 	* Coordination with maintainer of libsrcml for feature support is step one.
 * Add fields to srcml_cli.hpp to store necessary input data for functionality
 * Add cli options and functionality to collect the data from CLI input
-* Extract Method Refactoring on transform_srcml.cpp
-* Add element logic to method
-* Add attribute logic to method
-
-![transform_srcml Function PDG](images/PDG.png)
-```
-INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
-```
+* Extract Method Refactoring on transform_srcml.cpp for true result branch of xpath conditional 
+* Add element logic to extracted method
+* Add attribute logic to extracted method
 
 ----------------------------------------
 ### Object Oriented Input Sources
