@@ -53,7 +53,9 @@ In it's present state, the new srcml client's design is purely functional in mos
 
 Figure 2 - UML class diagram of the current approach for handling various input sources
 ![UML class diagram for input sources](images/input_sources_b4.png)
+
 The UML class diagram in Figure 2 shows that at present, very few objects are involved in the process of handling input sources as any class with a ".*" at the end represents a file with a collection of free functions versus an object with methods attached to it. The core significant dependency is that each of the input source handlers in the current approach are all dependant the srcml_input_src object mostly for it's constructors and free functions. Since these free functions are applied to each sudo input source "class", it makes sense to couple these related modules together with an inheriance hierarchy and unify the way the objects are used. The could be accomplished by transforming srcml_input_src into an abstract base class with a virtual function to be implemented uniquely by each that the other handlers for their respective input. In addition to this change,  the input handler object creation could be moved to take place in srcml_cli while the prefixes (which ultimately determine the input handler anyway) are added to the inputs. This way the objects are already setup and ready to be passed off to create srcml for processing where the vector of srcml_input_src objects can be iterated and their functions to generate a parse request can be run in a straight forward loop. Figure 3 illustrates the potential design changes to the input handling sub system.
+
 Figure 3 - Resulting UML class diagram after proposed changes
 ![Modified UML class diagram for input sources](images/input_sources_after.png)
 
