@@ -49,31 +49,29 @@ Figure 1 above shows a PDG of the function in need of modification. If we examin
 ----------------------------------------
 ### Object Oriented Input Sources
 #### Narrative
-In it's present state, the new srcml client's design is purely functional in most respects. One specific area of functionality that could benefit from the use of an object oriented design would be the input source handling. With a more object oriented approach, an inheritance hierarchy combined with one or more polymorphic methods could be utilized to simplify the way in which the input sources are deterimined and replace much of the contitional logic in create_srcml.cpp and consolidate those input checks and object creation in srcml_input_src.hpp. The result of this change would make collecting data from an input source in create_srcml.cpp a single method call and make adding additional input sources more straight forward as developers would only need to inherit from an abstract base class and fill in the necessary functionality.
+In it's present state, the new srcml client's design is purely functional in most respects. One specific area of functionality that could benefit from the use of an object oriented design would be the input source handling. With a more object oriented approach, an inheritance hierarchy combined with one or more polymorphic methods could be utilized to simplify the way in which the input sources are deterimined and replace much of the contitional logic in create_srcml.cpp and consolidate those input checks and object creation in srcml_cli. The result of this change would make collecting data from an input source in create_srcml.cpp a single method call and make adding additional input sources more straight forward as developers would only need to inherit from an abstract base class and fill in the necessary functionality.
+
+Figure 2 - UML class diagram of the current approach for handling various input sources
+![UML class diagram for input sources](images/input_sources_b4.png)
+The UML class diagram in Figure 2 shows that at present, very few objects are involved in the process of handling input sources as any class with a ".*" at the end represents a file with a collection of free functions versus an object with methods attached to it. The core significant dependency is that each of the input source handlers in the current approach are all dependant the srcml_input_src object mostly for it's constructors and free functions. Since these free functions are applied to each sudo input source "class", it makes sense to couple these related modules together with an inheriance hierarchy and unify the way the objects are used. The could be accomplished by transforming srcml_input_src into an abstract base class with a virtual function to be implemented uniquely by each that the other handlers for their respective input. In addition to this change,  the input handler object creation could be moved to take place in srcml_cli while the prefixes (which ultimately determine the input handler anyway) are added to the inputs. This way the objects are already setup and ready to be passed off to create srcml for processing where the vector of srcml_input_src objects can be iterated and their functions to generate a parse request can be run in a straight forward loop. Figure 3 illustrates the potential design changes to the input handling sub system.
+Figure 3 - Resulting UML class diagram after proposed changes
+![Modified UML class diagram for input sources](images/input_sources_after.png)
 
 #### Change Plan
-* Create Abstract Class "input_src"
-* Include data members and functions from "srcml_input_src"
-* Include public virtual function to generate a parse request to be implemented by all functions that implment the abstract class
-* Starting with "src_input_file", convert to subclass of "input_src"
+* Convert srcml_input_src. * to an Abstract Base Class
+* Include public virtual function to generate a parse request to be implemented by all classes that implment the abstract class
+* Starting with src_input_file.*, convert to subclass of "srcml_input_src"
 * Substitute object creation in "create_srcml" and usage in place of function call to ensure behavior is preserved
-* Move object creation into "srcml_input_src"
-* Change function in "creat_srcml" to pass an "input_src" object
-* Remove object creation from "create_srcml" and ensure behavior is preserved
-* Repeat for all other input sources
-* Replace includes to srcml_input_src.hpp to input_src.hpp
-* Remove srcml_input_src.*
-
-```
-INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
-```
+* Add field to srcml_request_t for a vector of srcml_input_src objects
+* Move object creation into srcml_cli.* as inputs are prefixed in the positional_args function
+* Run the parse request generation function for each object in the vector when passed to create_srcml.*
 
 ----------------------------------------
 ### Add Git Input Source to Client
 #### Narrative
 The srcml client currently support a number of input sources from both local and remote files including HTTP(S), FTP(S), SSH, etc. While the remote protocol support is quite comprehensive, one noticible omission is native support for a source repository using git version control. This feature addition could allow users to enter a git repository url and even a revision sha as input to retrieve the source of a project as input to srcml. This would prevent a user from having to first clone a repository externally to their local machine before running srcml and would reduce the number of steps required in this circumstance to one. This feature can also prove useful for a webservice based version of the srcml client in which access to the source code on a physical device (such as tablet or phone) might not be feasible. Example1 shows the the CLi option interface extension.
 
-**Example1**: Prefix of "git://" to identify a git resource and --revision to aquire a specific version of the sourcr repository.
+**Example**: Prefix of "git://" to identify a git resource and --revision to aquire a specific version of the sourcr repository.
 
 ```
 srcml git://[local or remourl for repo] --revision=[SHA]
