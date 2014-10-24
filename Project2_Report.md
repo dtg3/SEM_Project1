@@ -42,6 +42,29 @@ One specific applicaiton of this feature would be in assisting the srcMX GUI cli
 * Add element logic to method
 * Add attribute logic to method
 
+![transform_srcml Function PDG](images/PDG.png)
+```
+INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
+```
+
+----------------------------------------
+### Object Oriented Input Sources
+#### Narrative
+In it's present state, the new srcml client's design is purely functional in most respects. One specific area of functionality that could benefit from the use of an object oriented design would be the input source handling. With a more object oriented approach, an inheritance hierarchy combined with one or more polymorphic methods could be utilized to simplify the way in which the input sources are deterimined and replace much of the contitional logic in create_srcml.cpp and consolidate those input checks and object creation in srcml_input_src.hpp. The result of this change would make collecting data from an input source in create_srcml.cpp a single method call and make adding additional input sources more straight forward as developers would only need to inherit from an abstract base class and fill in the necessary functionality.
+
+#### Change Plan
+* Create Abstract Class "input_src"
+* Include data members and functions from "srcml_input_src"
+* Include public virtual function to generate a parse request to be implemented by all functions that implment the abstract class
+* Starting with "src_input_file", convert to subclass of "input_src"
+* Substitute object creation in "create_srcml" and usage in place of function call to ensure behavior is preserved
+* Move object creation into "srcml_input_src"
+* Change function in "creat_srcml" to pass an "input_src" object
+* Remove object creation from "create_srcml" and ensure behavior is preserved
+* Repeat for all other input sources
+* Replace includes to srcml_input_src.hpp to input_src.hpp
+* Remove srcml_input_src.*
+
 ```
 INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
 ```
@@ -74,28 +97,6 @@ srcml git://[local or remourl for repo] --revision=[SHA]
                     const srcml_request_t& srcml_request,
                     const std::string& input_file)
   to the conditional.
-
-```
-INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
-```
-
-----------------------------------------
-### Object Oriented Input Sources
-#### Narrative
-In it's present state, the new srcml client's design is purely functional in most respects. One specific area of functionality that could benefit from the use of an object oriented design would be the input source handling. With a more object oriented approach, an inheritance hierarchy combined with one or more polymorphic methods could be utilized to simplify the way in which the input sources are deterimined and replace much of the contitional logic in create_srcml.cpp and consolidate those input checks and object creation in srcml_input_src.hpp. The result of this change would make collecting data from an input source in create_srcml.cpp a single method call and make adding additional input sources more straight forward as developers would only need to inherit from an abstract base class and fill in the necessary functionality.
-
-#### Change Plan
-* Create Abstract Class "input_src"
-* Include data members and functions from "srcml_input_src"
-* Include public virtual function to generate a parse request to be implemented by all functions that implment the abstract class
-* Starting with "src_input_file", convert to subclass of "input_src"
-* Substitute object creation in "create_srcml" and usage in place of function call to ensure behavior is preserved
-* Move object creation into "srcml_input_src"
-* Change function in "creat_srcml" to pass an "input_src" object
-* Remove object creation from "create_srcml" and ensure behavior is preserved
-* Repeat for all other input sources
-* Replace includes to srcml_input_src.hpp to input_src.hpp
-* Remove srcml_input_src.*
 
 ```
 INSERT DIAGRAM AND ANALYSIS EXPLANATION HERE
