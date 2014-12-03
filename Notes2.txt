@@ -1,0 +1,4 @@
+Score: 100
+
+* Nicely generated PDG
+* Nicely generated UML Class Diagrams
